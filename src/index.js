@@ -1,12 +1,19 @@
 import { Observable } from "rxjs";
 
 const observable = new Observable((subscriber) => {
-  subscriber.next('Hello world');
-  subscriber.error('Error!'); // if error event happens, observable terminated
-  subscriber.next('test');
+  const id = setInterval(() => {
+    subscriber.next('test');
+    console.log('memory leak');
+  }, 1000);
 
-  subscriber.complete(); // terminates the observable preventing it from sending data
+  subscriber.complete();
+
+  return () => {
+    clearInterval(id);
+  }
 });
+
+console.log('before')
 
 observable.subscribe({
   next: (value) => {
@@ -21,3 +28,5 @@ observable.subscribe({
     console.log(err);
   }
 });
+
+console.log('after');
