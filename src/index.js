@@ -1,10 +1,19 @@
-import { fromEvent } from "rxjs";
+import { of, from } from "rxjs";
 
-const observable = fromEvent(document, 'click');
+const observable = from(fetch('https://jsonplaceholder.typicode.com/todos/1')
+.then(response => response.json())
+.then(json => console.log(json)));
 
 
 const subscription = observable.subscribe(
-  console.log
+  {
+    next(value) {
+      console.log(value)
+    },
+    complete() {
+      console.log('complete');
+    }
+  }
 );
 
-
+console.log('hello');
